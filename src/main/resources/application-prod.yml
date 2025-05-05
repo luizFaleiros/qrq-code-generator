@@ -1,0 +1,18 @@
+aws:
+  region: ${AWS_REGION}
+  s3:
+    bucket: ${AWS_BUCKET_NAME}
+  accessKeyId: ${KEY_ID}
+  secretKey: ${SECRET_KEY}
+  endpoint: https://s3.us-east-1.amazonaws.com
+  placeholder: https://%s.s3.%s.us-east-1.amazonaws.com/%s
+
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  otlp:
+    metrics:
+      export:
+        url: http://otel-collector:4317/v1/metrics
+        step: 10s
