@@ -12,8 +12,3 @@ management:
         url: http://localhost:4317/v1/metrics
         step: 10s
 
-  otel:
-    exporter:
-      otlp:
-        endpoint: http://localhost:4317
-
