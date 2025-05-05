@@ -1,0 +1,8 @@
+aws:
+  region: us-east-1
+  s3:
+    bucket: qr-code
+  accessKeyId: test
+  secretKey: test
+  endpoint: http://s3.localhost.localstack.cloud:4566
+  placeholder: http://%s.s3.%s.localhost.localstack.cloud:4566/%s
