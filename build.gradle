@@ -28,7 +28,7 @@ dependencies {
     implementation 'io.opentelemetry:opentelemetry-api'
     implementation 'io.opentelemetry:opentelemetry-sdk'
     implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
-    implementation("io.prometheus:prometheus-metrics-exporter-httpserver")
+    implementation 'io.prometheus:prometheus-metrics-exporter-httpserver'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
