@@ -26,6 +26,7 @@ public class QrCodeControllerImpl implements QrCodeController {
   }
 
   @PostMapping
+  @Override
   public ResponseEntity<QrCodeGenerateResponse> generate(@RequestBody QrCodeGenerateRequest qrCodeGenerateRequest)
       throws IOException, WriterException {
     try {
