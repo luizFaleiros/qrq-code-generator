@@ -43,4 +43,6 @@ checkstyle {
     toolVersion = '10.26.1'
     configFile = file("${project.rootDir}/config/checkstyle/google_checks.xml")
     sourceSets = [sourceSets.main, sourceSets.test]
+    ignoreFailures = false
+    maxWarnings = 0
 }
