@@ -4,6 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.7'
     id 'checkstyle'
     id 'jacoco'
+    id 'pmd'
 }
 
 group = 'qr.code'
@@ -78,23 +79,17 @@ jacocoTestReport {
 
 jacocoTestCoverageVerification {
     dependsOn jacocoTestReport
-    
     violationRules {
         rule {
             element = 'PACKAGE'
             limit {
                 counter = 'LINE'
                 value = 'COVEREDRATIO'
-                minimum = 0.3 // Temporarily lowered from 0.7 to pass the build
+                minimum = 0.3
             }
             excludes = [
                 'qr.code.generator.QrCodeGeneratorApplication',
-                'qr.code.generator.adapters.qrcode.dto.*',
-                'qr.code.generator.adapters.qrcode.*',
-                'qr.code.generator.infrastructure.*',
-                'qr.code.generator.core.ports.*',
-                'qr.code.generator.config.*',
-                'qr.code.generator.exception.*'
+                'qr.code.generator.adapters.qrcode.dto:.*',
             ]
         }
     }
@@ -108,4 +103,11 @@ test {
     testLogging {
         events 'passed', 'skipped', 'failed'
     }
+}
+
+pmd {
+    toolVersion = '7.15.0'
+    ignoreFailures = false
+    ruleSetFiles = files("${project.rootDir}/config/pmd/custom-pmd-ruleset.xml")
+    ruleSets = []
 }
