@@ -41,22 +41,6 @@ tasks.named('test') {
 
 checkstyle {
     toolVersion = '10.26.1'
-    configFile = rootProject.file('config/checkstyle/google_checks.xml')
+    configFile = file("${project.rootDir}/config/checkstyle/google_checks.xml")
     sourceSets = [sourceSets.main, sourceSets.test]
-    configProperties = [
-            'configDir': rootProject.file('config/checkstyle'),
-            'baseDir'  : rootDir,
-    ]
-    showViolations = true
-    ignoreFailures = false
-}
-
-tasks.withType(Checkstyle) {
-    reports {
-        html.destination rootProject.file("build/reports/checkstyle.html")
-    }
-}
-
-checkstyleTest {
-    enabled = true
 }
