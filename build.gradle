@@ -45,7 +45,7 @@ checkstyle {
     sourceSets = [sourceSets.main, sourceSets.test]
     configProperties = [
             'configDir': rootProject.file('config/checkstyle'),
-            'baseDir': rootDir,
+            'baseDir'  : rootDir,
     ]
     showViolations = true
     ignoreFailures = false
