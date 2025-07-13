@@ -46,11 +46,59 @@ checkstyle {
     ignoreFailures = false
     maxWarnings = 0
 }
+jacoco {
+    toolVersion = '0.8.13'
+    reportsDirectory = layout.buildDirectory.dir('jacoco-reports')
+}
 
 jacocoTestReport {
     dependsOn test
+    reports {
+        xml.required = true
+        csv.required = false
+        html.required = true
+        html.outputLocation = layout.buildDirectory.dir('jacoco-html')
+    }
+    
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                'qr/code/generator/QrCodeGeneratorApplication.class',
+                'qr/code/generator/configuration/**',
+                'qr/code/generator/dto/**',
+                'qr/code/generator/exception/**'
+            ])
+        }))
+    }
 }
 
+jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    
+    violationRules {
+        rule {
+            element = 'PACKAGE'
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.7
+            }
+            excludes = [
+                'qr.code.generator.QrCodeGeneratorApplication',
+                'qr.code.generator.configuration.*',
+                'qr.code.generator.dto.*',
+                'qr.code.generator.exception.*'
+            ]
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
+
 test {
+    useJUnitPlatform()
     finalizedBy jacocoTestReport
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+    }
 }

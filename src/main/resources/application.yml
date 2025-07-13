@@ -12,3 +12,11 @@ management:
         url: http://localhost:4317/v1/metrics
         step: 10s
 
+aws:
+  region: ${AWS_REGION}
+  s3:
+    bucket: ${AWS_BUCKET_NAME}
+  accessKeyId: ${KEY_ID}
+  secretKey: ${SECRET_KEY}
+  endpoint: ${AWS_ENDPOINT}
+  placeholder: ${AWS_PLACEHOLDER}
