@@ -2,9 +2,9 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.5'
     id 'io.spring.dependency-management' version '1.1.7'
+    id 'checkstyle'
+    id 'jacoco'
 }
-
-apply plugin: 'checkstyle'
 
 group = 'qr.code'
 version = '0.0.1-SNAPSHOT'
@@ -45,4 +45,12 @@ checkstyle {
     sourceSets = [sourceSets.main, sourceSets.test]
     ignoreFailures = false
     maxWarnings = 0
+}
+
+jacocoTestReport {
+    dependsOn test
+}
+
+test {
+    finalizedBy jacocoTestReport
 }
