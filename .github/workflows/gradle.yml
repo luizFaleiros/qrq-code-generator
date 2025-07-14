@@ -48,7 +48,7 @@ jobs:
 
       - name: Publicar relatório de cobertura (se aplicável)
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
           path: build/reports/jacoco/test/html
