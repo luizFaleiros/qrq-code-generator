@@ -46,9 +46,30 @@ jobs:
       - name: Build final
         run: ./gradlew build --no-daemon -x test -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest -x jacocoTestReport
 
-      - name: Publicar relatório de cobertura (se aplicável)
+      - name: Publicar relatório de cobertura
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: build/reports/jacoco/test/html
+          path: build/reports/jacoco-reports/html
+
+      - name: Publicar relatório de testes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: build/reports/tests/test
+
+      - name: Publicar relatório do Checkstyle
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkstyle-report
+          path: build/reports/checkstyle
+
+      - name: Publicar relatório do PMD
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pmd-report
+          path: build/reports/pmd
