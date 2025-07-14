@@ -1,0 +1,54 @@
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ '**' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      - name: Configurar JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+          cache: 'gradle'
+
+      - name: Configurar Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Validar dependências
+        run: ./gradlew dependencies --no-daemon
+
+      - name: Compilar projeto
+        run: ./gradlew assemble --no-daemon
+
+      - name: Executar testes
+        run: ./gradlew test --no-daemon -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest -x jacocoTestReport
+
+      - name: Executar Checkstyle
+        run: ./gradlew checkstyleMain checkstyleTest --no-daemon -x test -x pmdMain -x pmdTest -x jacocoTestReport
+
+      - name: Executar PMD
+        run: ./gradlew pmdMain pmdTest --no-daemon -x test -x checkstyleMain -x checkstyleTest -x jacocoTestReport
+
+      - name: Executar Jacoco
+        run: ./gradlew jacocoTestReport --no-daemon -x test -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest
+
+      - name: Build final
+        run: ./gradlew build --no-daemon -x test -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest -x jacocoTestReport
+
+      - name: Publicar relatório de cobertura (se aplicável)
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/html
