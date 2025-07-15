@@ -2,7 +2,7 @@ name: Java CI with Gradle
 
 on:
   pull_request:
-    branches: [ 'main' ]
+    branches: [ 'main']
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: Checkout código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configurar JDK 21
         uses: actions/setup-java@v4
@@ -23,7 +23,7 @@ jobs:
           cache: 'gradle'
 
       - name: Configurar Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Validar dependências
         run: ./gradlew dependencies --no-daemon
@@ -32,19 +32,60 @@ jobs:
         run: ./gradlew assemble --no-daemon
 
       - name: Executar testes
+        id: tests
         run: ./gradlew test --no-daemon -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest -x jacocoTestReport --scan
 
       - name: Executar Checkstyle
+        id: checkstyle
         run: ./gradlew checkstyleMain checkstyleTest --no-daemon -x test -x pmdMain -x pmdTest -x jacocoTestReport --scan
 
       - name: Executar PMD
+        id: pmd
         run: ./gradlew pmdMain pmdTest --no-daemon -x test -x checkstyleMain -x checkstyleTest -x jacocoTestReport --scan
 
       - name: Executar Jacoco
+        id: jacoco
         run: ./gradlew jacocoTestReport --no-daemon -x test -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest --scan
 
       - name: Build final
+        id: build
         run: ./gradlew build --no-daemon -x test -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest -x jacocoTestReport --scan
+
+      - name: Validar todos os checks
+        run: |
+          echo "✅ Todos os checks obrigatórios passaram:"
+          echo "- Testes: ${{ steps.tests.outcome }}"
+          echo "- Checkstyle: ${{ steps.checkstyle.outcome }}"
+          echo "- PMD: ${{ steps.pmd.outcome }}"
+          echo "- JaCoCo: ${{ steps.jacoco.outcome }}"
+          echo "- Build: ${{ steps.build.outcome }}"
+          
+          if [[ "${{ steps.tests.outcome }}" != "success" ]]; then
+            echo "❌ Testes falharam"
+            exit 1
+          fi
+          
+          if [[ "${{ steps.checkstyle.outcome }}" != "success" ]]; then
+            echo "❌ Checkstyle falhou"
+            exit 1
+          fi
+          
+          if [[ "${{ steps.pmd.outcome }}" != "success" ]]; then
+            echo "❌ PMD falhou"
+            exit 1
+          fi
+          
+          if [[ "${{ steps.jacoco.outcome }}" != "success" ]]; then
+            echo "❌ JaCoCo falhou"
+            exit 1
+          fi
+          
+          if [[ "${{ steps.build.outcome }}" != "success" ]]; then
+            echo "❌ Build falhou"
+            exit 1
+          fi
+          
+          echo "🎉 Todos os checks passaram com sucesso!"
 
       - name: Publicar relatório de cobertura
         if: always()
