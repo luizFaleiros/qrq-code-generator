@@ -6,51 +6,87 @@ on:
   workflow_dispatch:
 
 jobs:
+
+  dependencies:
+    uses: ./.github/workflows/gradle-common.yml
+    with:
+      gradle_task: 'dependencies'
+
+  checkstyle:
+    uses: ./.github/workflows/gradle-common.yml
+    with:
+      gradle_task: 'checkstyleMain checkstyleTest'
+
+  pmd:
+    uses: ./.github/workflows/gradle-common.yml
+    with:
+      gradle_task: 'pmdMain pmdTest'
+
+  spotbugs:
+    uses: ./.github/workflows/gradle-common.yml
+    with:
+      gradle_task: 'spotbugsMain spotbugsTest'
+
+  tests:
+    uses: ./.github/workflows/gradle-common.yml
+    with:
+      gradle_task: 'test'
+
+  coverage:
+    uses: ./.github/workflows/gradle-common.yml
+    with:
+      gradle_task: 'jacocoTestReport'
+
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       actions: read
+    needs:
+      - checkstyle
+      - dependencies
+      - tests
+      - coverage
+      - pmd
+      - spotbugs
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
           java-version: '21'
-      
-      - name: Set up Gradle with caching
-        uses: gradle/actions/setup-gradle@v3
 
-      - name: Validate dependencies
-        run: ./gradlew dependencies --no-daemon
-
-      - name: Build (compile)
-        run: ./gradlew assemble --no-daemon
-
-      - name: Run tests
-        run: ./gradlew test --no-daemon --scan
-        continue-on-error: false
-
-      - name: Run Checkstyle
-        run: ./gradlew checkstyleMain checkstyleTest --no-daemon --scan
-
-      - name: Run PMD
-        run: ./gradlew pmdMain pmdTest --no-daemon --scan
-
-      - name: Run SpotBugs
-        run: ./gradlew spotbugsMain spotbugsTest --no-daemon --scan
-
-      - name: Run Jacoco
-        run: ./gradlew jacocoTestReport --no-daemon --scan
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle.properties', '**/settings.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: Full Build (without redundant tasks)
         run: ./gradlew build --no-daemon -x test -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest -x jacocoTestReport --scan
 
-        
+  reports:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    needs:
+      - build
+      - coverage
+      - tests
+      - checkstyle
+      - pmd
+      - spotbugs
+
+    steps:
       - name: Upload Jacoco report
         if: always()
         uses: actions/upload-artifact@v4
