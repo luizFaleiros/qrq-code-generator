@@ -32,19 +32,19 @@ jobs:
         run: ./gradlew assemble --no-daemon
 
       - name: Executar testes
-        run: ./gradlew test --no-daemon -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest -x jacocoTestReport
+        run: ./gradlew test --no-daemon -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest -x jacocoTestReport --scan
 
       - name: Executar Checkstyle
-        run: ./gradlew checkstyleMain checkstyleTest --no-daemon -x test -x pmdMain -x pmdTest -x jacocoTestReport
+        run: ./gradlew checkstyleMain checkstyleTest --no-daemon -x test -x pmdMain -x pmdTest -x jacocoTestReport --scan
 
       - name: Executar PMD
-        run: ./gradlew pmdMain pmdTest --no-daemon -x test -x checkstyleMain -x checkstyleTest -x jacocoTestReport
+        run: ./gradlew pmdMain pmdTest --no-daemon -x test -x checkstyleMain -x checkstyleTest -x jacocoTestReport --scan
 
       - name: Executar Jacoco
-        run: ./gradlew jacocoTestReport --no-daemon -x test -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest
+        run: ./gradlew jacocoTestReport --no-daemon -x test -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest --scan
 
       - name: Build final
-        run: ./gradlew build --no-daemon -x test -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest -x jacocoTestReport
+        run: ./gradlew build --no-daemon -x test -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest -x jacocoTestReport --scan
 
       - name: Publicar relatório de cobertura
         if: always()
