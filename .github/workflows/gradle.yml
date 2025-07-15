@@ -79,7 +79,6 @@ jobs:
       contents: read
       actions: read
     needs:
-      - build
       - coverage
       - tests
       - checkstyle
