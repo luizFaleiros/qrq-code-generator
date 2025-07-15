@@ -37,18 +37,23 @@ jobs:
 
       - name: Run Checkstyle
         run: ./gradlew checkstyleMain checkstyleTest --no-daemon --scan
+        continue-on-error: false
 
       - name: Run PMD
         run: ./gradlew pmdMain pmdTest --no-daemon --scan
+        continue-on-error: false
 
       - name: Run SpotBugs
         run: ./gradlew spotbugsMain spotbugsTest --no-daemon --scan
+        continue-on-error: false
 
       - name: Run Jacoco
         run: ./gradlew jacocoTestReport --no-daemon --scan
+        continue-on-error: false
 
       - name: Full Build (without redundant tasks)
         run: ./gradlew build --no-daemon -x test -x checkstyleMain -x checkstyleTest -x pmdMain -x pmdTest -x jacocoTestReport --scan
+        continue-on-error: false
 
         
       - name: Upload Jacoco report
