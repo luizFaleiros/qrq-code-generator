@@ -5,6 +5,7 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'pmd'
+    id 'com.github.spotbugs' version '6.2.2'
 }
 
 group = 'qr.code'
@@ -118,4 +119,12 @@ pmd {
     ignoreFailures = false
     ruleSetFiles = files("${project.rootDir}/config/pmd/custom-pmd-ruleset.xml")
     ruleSets = []
+}
+
+tasks.spotbugsMain {
+    reports.create("html") {
+        required = true
+        outputLocation = file("$buildDir/reports/spotbugs/spotbugs.html")
+        setStylesheet("fancy-hist.xsl")
+    }
 }

@@ -41,6 +41,9 @@ jobs:
       - name: Run PMD
         run: ./gradlew pmdMain pmdTest --no-daemon --scan
 
+      - name: Run SpotBugs
+        run: ./gradlew spotbugsMain spotbugsTest --no-daemon --scan
+
       - name: Run Jacoco
         run: ./gradlew jacocoTestReport --no-daemon --scan
 
@@ -75,3 +78,10 @@ jobs:
         with:
           name: pmd-report
           path: build/reports/pmd
+
+      - name: Upload SpotBugs report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spotbugs-report
+          path: build/reports/spotbugs

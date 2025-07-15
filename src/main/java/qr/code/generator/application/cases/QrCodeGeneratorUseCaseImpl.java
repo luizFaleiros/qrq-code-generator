@@ -20,12 +20,9 @@ import qr.code.generator.core.ports.StoragePort;
 @Service
 public class QrCodeGeneratorUseCaseImpl implements QrCodeGeneratorUseCase {
   private final StoragePort storagePort;
-  private final MeterRegistry meterRegistry;
-  QRCodeWriter qrCodeWriter;
 
-  public QrCodeGeneratorUseCaseImpl(StoragePort storagePort, MeterRegistry meterRegistry) {
+  public QrCodeGeneratorUseCaseImpl(StoragePort storagePort) {
     this.storagePort = storagePort;
-    this.meterRegistry = meterRegistry;
 
   }
 
