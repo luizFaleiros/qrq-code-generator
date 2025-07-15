@@ -49,7 +49,7 @@ checkstyle {
 }
 jacoco {
     toolVersion = '0.8.13'
-    reportsDirectory = layout.buildDirectory.dir('jacoco-reports')
+    reportsDirectory = layout.buildDirectory.dir('reports/jacoco/test/xml')
 }
 
 jacocoTestReport {
@@ -58,7 +58,7 @@ jacocoTestReport {
         xml.required = true
         csv.required = false
         html.required = true
-        html.outputLocation = layout.buildDirectory.dir('jacoco-reports/html')
+        html.outputLocation = layout.buildDirectory.dir('reports/jacoco/test/html')
     }
     
     afterEvaluate {
