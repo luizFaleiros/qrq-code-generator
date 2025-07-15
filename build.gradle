@@ -64,7 +64,7 @@ jacocoTestReport {
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
-                'qr/code/generator/QrCodeGeneratorApplication.class',
+                'qr/code/generator/GeneratorApplication.class',
                 'qr/code/generator/configuration/**',
                 'qr/code/generator/dto/**',
                 'qr/code/generator/exception/**',
@@ -81,15 +81,23 @@ jacocoTestCoverageVerification {
     dependsOn jacocoTestReport
     violationRules {
         rule {
-            element = 'PACKAGE'
+            element = 'CLASS'
             limit {
                 counter = 'LINE'
                 value = 'COVEREDRATIO'
-                minimum = 0.3
+                minimum = 0.8
             }
+            includes = [
+                'qr.code.generator.application.cases.*',
+                'qr.code.generator.core.cases.*',
+                'qr.code.generator.adapters.qrcode.QrCodeController',
+                'qr.code.generator.infrastructure.gateway.*',
+                'qr.code.generator.infrastructure.S3StorageAdapter'
+            ]
             excludes = [
-                'qr.code.generator.QrCodeGeneratorApplication',
-                'qr.code.generator.adapters.qrcode.dto:.*',
+                'qr.code.generator.GeneratorApplication',
+                'qr.code.generator.adapters.qrcode.dto.*',
+                'qr.code.generator.infrastructure.configuration.*'
             ]
         }
     }
