@@ -29,5 +29,41 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle', '**/gradle.properties', '**/settings.gradle') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
       - name: Run Gradle Task
         run: ./gradlew ${{ inputs.gradle_task }} --no-daemon --scan
+
+      - name: Upload Checkstyle report
+        if: ${{ inputs.gradle_task == 'checkstyleMain checkstyleTest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkstyle-report
+          path: build/reports/checkstyle
+
+      - name: Upload PMD report
+        if: ${{ inputs.gradle_task == 'pmdMain pmdTest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pmd-report
+          path: build/reports/pmd
+
+      - name: Upload SpotBugs report
+        if: ${{ inputs.gradle_task == 'spotbugsMain spotbugsTest' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: spotbugs-report
+          path: build/reports/spotbugs
+
+      - name: Upload test report
+        if: ${{ inputs.gradle_task == 'test' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: build/reports/tests/test
+
+      - name: Upload Jacoco report
+        if: ${{ inputs.gradle_task == 'jacocoTestReport' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/html

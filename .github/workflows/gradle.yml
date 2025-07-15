@@ -87,37 +87,32 @@ jobs:
       - spotbugs
 
     steps:
-      - name: Upload Jacoco report
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Download Jacoco report
+        uses: actions/download-artifact@v4
         with:
           name: jacoco-report
           path: build/reports/jacoco/test/html
 
-      - name: Upload test report
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Download test report
+        uses: actions/download-artifact@v4
         with:
           name: test-report
           path: build/reports/tests/test
 
-      - name: Upload Checkstyle report
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Download Checkstyle report
+        uses: actions/download-artifact@v4
         with:
           name: checkstyle-report
           path: build/reports/checkstyle
 
-      - name: Upload PMD report
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Download PMD report
+        uses: actions/download-artifact@v4
         with:
           name: pmd-report
           path: build/reports/pmd
 
-      - name: Upload SpotBugs report
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Download SpotBugs report
+        uses: actions/download-artifact@v4
         with:
           name: spotbugs-report
           path: build/reports/spotbugs
