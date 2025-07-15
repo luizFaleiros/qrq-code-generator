@@ -5,6 +5,7 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'pmd'
+    id 'com.github.spotbugs' version '6.2.2'
 }
 
 group = 'qr.code'
@@ -49,7 +50,7 @@ checkstyle {
 }
 jacoco {
     toolVersion = '0.8.13'
-    reportsDirectory = layout.buildDirectory.dir('jacoco-reports')
+    reportsDirectory = layout.buildDirectory.dir('reports/jacoco/test/xml')
 }
 
 jacocoTestReport {
@@ -58,7 +59,7 @@ jacocoTestReport {
         xml.required = true
         csv.required = false
         html.required = true
-        html.outputLocation = layout.buildDirectory.dir('jacoco-reports/html')
+        html.outputLocation = layout.buildDirectory.dir('reports/jacoco/test/html')
     }
     
     afterEvaluate {
@@ -118,4 +119,12 @@ pmd {
     ignoreFailures = false
     ruleSetFiles = files("${project.rootDir}/config/pmd/custom-pmd-ruleset.xml")
     ruleSets = []
+}
+
+tasks.spotbugsMain {
+    reports.create("html") {
+        required = true
+        outputLocation = file("$buildDir/reports/spotbugs/spotbugs.html")
+        setStylesheet("fancy-hist.xsl")
+    }
 }

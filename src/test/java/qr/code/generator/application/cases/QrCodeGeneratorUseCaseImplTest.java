@@ -27,15 +27,13 @@ class QrCodeGeneratorUseCaseImplTest {
   @Mock
   private StoragePort storagePort;
 
-  private MeterRegistry meterRegistry;
   private QrCodeGeneratorUseCaseImpl qrCodeGenerator;
-  private final String testUrl = "https://example.com/qr/" + UUID.randomUUID();
-  private final String testText = "Test QR Code";
+  private String testUrl = "https://example.com/qr/" + UUID.randomUUID();
+  private String testText = "Test QR Code";
 
   @BeforeEach
   void setUp() {
-    meterRegistry = new SimpleMeterRegistry();
-    qrCodeGenerator = new QrCodeGeneratorUseCaseImpl(storagePort, meterRegistry);
+    qrCodeGenerator = new QrCodeGeneratorUseCaseImpl(storagePort);
   }
 
   @Test
